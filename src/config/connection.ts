@@ -3,6 +3,10 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// Debug: verificar se as variáveis estão sendo lidas
+console.log('MONGO_URI:', process.env.MONGO_URI);
+console.log('DB_NAME_PATIENT:', process.env.DB_NAME_PATIENT);
+
 export abstract class BaseBancoDeDados {
     constructor() {
         this.conectar();
