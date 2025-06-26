@@ -121,4 +121,30 @@ export class RankingController {
             });
         }
     }
+
+    // Buscar estatísticas resumidas do usuário (para fornecedores verem ao clicar no ícone do nível)
+    async buscarEstatisticasResumidas(req: AuthenticatedRequest, res: Response): Promise<void> {
+        try {
+            const { id_usuario } = req.params;
+
+            if (!id_usuario) {
+                throw new CustomError('ID do usuário não fornecido', 400);
+            }
+
+            const estatisticas = await this.rankingService.buscarEstatisticasResumidas(id_usuario);
+
+            res.status(200).json(estatisticas);
+
+        } catch (error) {
+            if (error instanceof CustomError) {
+                res.status(error.statusCode).json({ 
+                    error: error.message 
+                });
+            } else {
+                res.status(500).json({ 
+                    error: 'Erro interno do servidor' 
+                });
+            }
+        }
+    }
 } 

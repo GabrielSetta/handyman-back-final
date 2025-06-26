@@ -10,6 +10,11 @@ rankingRouter.post('/avaliar-usuario',
     rankingController.avaliarUsuario.bind(rankingController)
 );
 
+// Nova rota para estatísticas resumidas (ao clicar no ícone do nível) - DEVE VIR ANTES
+rankingRouter.get('/usuario/:id_usuario/resumo', 
+    rankingController.buscarEstatisticasResumidas.bind(rankingController)
+);
+
 rankingRouter.get('/usuario/:id_usuario', 
     rankingController.buscarRankingUsuario.bind(rankingController)
 );

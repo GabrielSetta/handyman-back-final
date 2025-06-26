@@ -179,4 +179,54 @@ export class RankingService {
 
         return { positivos, negativos };
     }
+
+    // Buscar estatísticas resumidas do usuário (para fornecedores verem ao clicar no ícone do nível)
+    async buscarEstatisticasResumidas(id_usuario: string): Promise<{
+        nivel: string;
+        score: number;
+        total_avaliacoes: number;
+        top_aspectos_positivos: Array<{
+            aspecto: string;
+            percentual: number;
+        }>;
+        top_aspectos_negativos: Array<{
+            aspecto: string;
+            percentual: number;
+        }>;
+    }> {
+        try {
+            // Garantir que o usuário tenha um ranking
+            await this.rankingRepository.criarOuBuscarRanking(id_usuario);
+            
+            const estatisticas = await this.rankingRepository.calcularEstatisticas(id_usuario);
+            
+            // Pegar apenas os top 3 aspectos positivos (ordenados por percentual)
+            const topPositivos = estatisticas.aspectos_positivos
+                .sort((a, b) => b.percentual - a.percentual)
+                .slice(0, 3)
+                .map(item => ({
+                    aspecto: this.traduzirAspecto(item.aspecto),
+                    percentual: item.percentual
+                }));
+
+            // Pegar apenas os top 3 aspectos negativos (ordenados por percentual)
+            const topNegativos = estatisticas.aspectos_negativos
+                .sort((a, b) => b.percentual - a.percentual)
+                .slice(0, 3)
+                .map(item => ({
+                    aspecto: this.traduzirAspecto(item.aspecto),
+                    percentual: item.percentual
+                }));
+            
+            return {
+                nivel: estatisticas.nivel_atual,
+                score: estatisticas.score_atual,
+                total_avaliacoes: estatisticas.total_avaliacoes,
+                top_aspectos_positivos: topPositivos,
+                top_aspectos_negativos: topNegativos
+            };
+        } catch (error) {
+            throw new CustomError('Erro ao buscar estatísticas resumidas do usuário', 500);
+        }
+    }
 } 
