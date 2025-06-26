@@ -134,8 +134,8 @@ export class RankingRepository {
     private calcularNivel(score: number): NivelRanking {
         if (score >= 90) return NivelRanking.DIAMANTE;
         if (score >= 80) return NivelRanking.PLATINA;
-        if (score >= 70) return NivelRanking.OURO;
-        if (score >= 50) return NivelRanking.PRATA;
+        if (score >= 60) return NivelRanking.OURO;
+        if (score >= 30) return NivelRanking.PRATA;
         return NivelRanking.BRONZE;
     }
 } 
